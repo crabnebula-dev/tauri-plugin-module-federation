@@ -80,7 +80,7 @@ module.exports = withZephyr()({
 	},
 	plugins: [
 		new ModuleFederationPlugin({
-			name: "example-guest",
+			name: "example_guest",
 			filename: "remoteEntry.js",
 			exposes: {
 				"./Button": "./src/Button",

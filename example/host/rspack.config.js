@@ -86,7 +86,7 @@ module.exports = withZephyr()({
 			name: "example-host",
 			filename: "remoteEntry.js",
 			remotes: {
-				"example-guest": "example-guest@http://localhost:3002/remoteEntry.js",
+				"example-guest": "example_guest@http://localhost:3002/remoteEntry.js",
 			},
 		}),
 		new HtmlRspackPlugin({
