@@ -10,4 +10,10 @@ Run `pnpm dev` in this directory to start the guest development server and the h
 ## Production
 
 Run `pnpm build` in this directory to build the guest app and host Tauri app.
-Currently the host app requires the guest development server to be running to work, I'm not sure what the best way to handle this is yet.
+Currently the host app requires the guest development server to be running to work.
+This will change once [Zephyr Cloud](https://zephyr-cloud.io/) is properly integrated.
+
+## Zephyr Cloud integration
+
+To use the Zephyr Cloud integration, run the above commands with `WITH_ZEPHYR=true` set.
+This is currently disabled by default as it's not working properly.

@@ -1,0 +1,20 @@
+[package]
+name = "tauri-plugin-module-federation"
+version = "0.0.0"
+authors = ["You"]
+description = ""
+edition = "2021"
+rust-version = "1.70"
+exclude = ["/examples", "/webview-dist", "/webview-src", "/node_modules"]
+links = "tauri-plugin-module-federation"
+
+[dependencies]
+tauri = { version = "2.0.0-beta.23" }
+serde = "1.0"
+thiserror = "1.0"
+reqwest = "0.12.5"
+url = "2.5.2"
+form_urlencoded = "1.2.1"
+
+[build-dependencies]
+tauri-plugin = { version = "2.0.0-beta.18", features = ["build"] }

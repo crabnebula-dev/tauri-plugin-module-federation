@@ -1,0 +1,7 @@
+{
+	"name": "@crabnebula-dev/tauri-module-federation",
+	"main": "index.js",
+	"devDependencies": {
+		"@module-federation/runtime": "0.2.5"
+	}
+}

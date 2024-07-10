@@ -16,7 +16,7 @@ const { withZephyr } = require("zephyr-webpack-plugin");
 // with might lead the bundle size problems
 const deps = require("./package.json").dependencies;
 
-module.exports = withZephyr()({
+let config = {
 	entry: "./src/index",
 	mode: "development",
 	watch: process.env.NODE_ENV === "development",
@@ -88,9 +88,24 @@ module.exports = withZephyr()({
 			remotes: {
 				"example-guest": "example_guest@http://localhost:3002/remoteEntry.js",
 			},
+			runtimePlugins: [require.resolve("../../module-federation-plugin")],
+			shared: {
+				...deps,
+				react: {
+					singleton: true,
+				},
+				"react-dom": {
+					singleton: true,
+				},
+				lodash: {},
+			},
 		}),
 		new HtmlRspackPlugin({
 			template: "./public/index.html",
 		}),
 	],
-});
+};
+
+if (process.env.WITH_ZEPHYR === "true") config = withZephyr()(config);
+
+module.exports = config;
