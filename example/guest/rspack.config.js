@@ -3,6 +3,7 @@ const {
 	container: { ModuleFederationPlugin },
 } = require("@rspack/core");
 const path = require("node:path");
+const { withZephyr } = require("zephyr-webpack-plugin");
 
 // adds all your dependencies as shared modules
 // version is inferred from package.json in the dependencies
@@ -15,7 +16,7 @@ const path = require("node:path");
 // with might lead the bundle size problems
 const deps = require("./package.json").dependencies;
 
-module.exports = {
+module.exports = withZephyr()({
 	entry: "./src/index",
 	mode: "development",
 	devServer: {
@@ -79,24 +80,14 @@ module.exports = {
 	},
 	plugins: [
 		new ModuleFederationPlugin({
-			name: "guest",
+			name: "example-guest",
 			filename: "remoteEntry.js",
 			exposes: {
 				"./Button": "./src/Button",
-			},
-			shared: {
-				...deps,
-				react: {
-					singleton: true,
-				},
-				"react-dom": {
-					singleton: true,
-				},
-				lodash: {},
 			},
 		}),
 		new HtmlRspackPlugin({
 			template: "./public/index.html",
 		}),
 	],
-};
+});
