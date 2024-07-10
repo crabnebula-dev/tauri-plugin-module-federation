@@ -40,7 +40,7 @@ struct Schemes(pub Mutex<HashMap<(String, Option<u16>), String>>);
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("tauri-plugin-module-federation")
+    let builder = Builder::new("tauri-plugin-module-federation")
         .register_asynchronous_uri_scheme_protocol(
             "module-federation",
             move |app, request, responder| {
@@ -107,13 +107,36 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                     );
                 });
             },
-        )
+        );
+
+    #[cfg(debug_assertions)]
+    let builder =
+        builder.js_init_script(
+            r#"""
+            setTimeout(() => {
+            	const federation = window.__FEDERATION__;
+
+             	if(federation) {
+              	const plugins = federation.__INSTANCES__[0]?.hooks.registerPlugins ?? {};
+
+                if(!("tauri-module-federation" in plugins))
+                	console.warn("[tauri-plugin-module-federation] @crabnebula-dev/tauri-module-federation not found. Have you added it to to your Module Federation configuration?")
+
+              } else console.warn("[tauri-plugin-module-federation] Module Federation Runtime not found")
+
+            }, 100);
+           	"""#
+            .to_string(),
+        );
+
+    builder
         .setup(|app, api| {
             #[cfg(mobile)]
             let tauri_plugin_module_federation = mobile::init(app, api)?;
             #[cfg(desktop)]
             let tauri_plugin_module_federation = desktop::init(app, api)?;
             app.manage(tauri_plugin_module_federation);
+
             Ok(())
         })
         .build()
