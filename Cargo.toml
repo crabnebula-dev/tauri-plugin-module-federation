@@ -1,0 +1,3 @@
+[workspace]
+members = ["example/host/src-tauri"]
+resolver = "2"

@@ -1,0 +1,7 @@
+{
+	"name": "example",
+	"scripts": {
+		"dev": "pnpm --filter example-* --parallel dev",
+		"build": "pnpm --filter example-* --parallel build"
+	}
+}
