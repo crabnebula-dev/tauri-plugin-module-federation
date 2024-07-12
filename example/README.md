@@ -1,11 +1,12 @@
 # Module Federation Example
 
-`guest` is a standalone React app that provides a `Button` component via module federation.
+`guest` and `guest-2` ars standalone React apps that provides a `Button` component via module federation.
+`guest` consumes the `Button` from `guest-2` as a dependency-of-dependency test.
 `host` is a Tauri + React app that consumes the `Button` component from the `guest` app.
 
 ## Development
 
-Run `pnpm dev` in this directory to start the guest development server and the host Tauri app.
+Run `pnpm dev` in this directory to start the `guest` development servers and the host Tauri app.
 
 ## Production
 
