@@ -2,6 +2,8 @@
 	"name": "example",
 	"scripts": {
 		"dev": "pnpm --filter example-* --parallel dev",
-		"build": "pnpm --filter example-* --parallel build"
+		"build": "pnpm --filter example-* --parallel build",
+		"guests": "pnpm --filter example-guest* --parallel",
+		"host": "pnpm --filter example-host* --parallel"
 	}
 }

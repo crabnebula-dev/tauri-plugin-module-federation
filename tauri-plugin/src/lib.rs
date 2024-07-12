@@ -163,7 +163,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
              	if(federation) {
               	const plugins = federation.__INSTANCES__[0]?.hooks.registerPlugins ?? {};
 
-                if(!("tauri-module-federation" in plugins))
+                if(!("tauri-module-federation-host" in plugins))
                 	console.warn("[tauri-plugin-module-federation] @crabnebula-dev/tauri-module-federation not found. Have you added it to to your Module Federation configuration?")
 
               } else console.warn("[tauri-plugin-module-federation] Module Federation Runtime not found")
