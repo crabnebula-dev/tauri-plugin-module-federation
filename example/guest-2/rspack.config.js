@@ -19,20 +19,15 @@ const deps = require("./package.json").dependencies;
 let config = {
 	entry: "./src/index",
 	mode: "development",
-	watch: process.env.NODE_ENV === "development",
 	devServer: {
-		static: {
-			directory: path.join(__dirname, "dist"),
-		},
+		static: path.join(__dirname, "dist"),
+		port: 3003,
 		headers: {
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
 			"Access-Control-Allow-Headers":
 				"X-Requested-With, content-type, Authorization",
 		},
-		hot: true,
-		port: 3001,
-		liveReload: true,
 	},
 	target: "web",
 	output: {
@@ -83,12 +78,11 @@ let config = {
 	},
 	plugins: [
 		new ModuleFederationPlugin({
-			name: "example_host",
+			name: "example_guest_2",
 			filename: "remoteEntry.js",
-			remotes: {
-				"example-guest": "example_guest@http://localhost:3002/remoteEntry.js",
+			exposes: {
+				"./Button": "./src/Button",
 			},
-			runtimePlugins: [require.resolve("../../module-federation-plugin")],
 			shared: {
 				...deps,
 				react: {

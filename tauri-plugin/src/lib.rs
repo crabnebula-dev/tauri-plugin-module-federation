@@ -1,5 +1,6 @@
 use std::{collections::HashMap, sync::Mutex};
 
+use sha::utils::{Digest, DigestExt};
 use tauri::{
     http::uri,
     plugin::{Builder, TauriPlugin},
@@ -44,6 +45,14 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         .register_asynchronous_uri_scheme_protocol(
             "module-federation",
             move |app, request, responder| {
+                let cache_dir = app
+                    .path()
+                    .app_cache_dir()
+                    .expect("No cache dir!")
+                    .join("module-federation");
+
+                std::fs::create_dir_all(&cache_dir).unwrap();
+
                 let app = app.clone();
                 app.manage(Schemes::default());
 
@@ -89,22 +98,59 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                             Url::parse(&builder.build().unwrap().to_string()).unwrap()
                         });
 
-                    let request_builder = client.request(request.method().clone(), url);
+                    let request_builder = client.request(request.method().clone(), url.clone());
 
                     let req = request_builder.build().unwrap();
-                    let mut resp = client.execute(req).await.unwrap();
+                    let fetch_resp = client.execute(req).await;
+
+                    let host = {
+                        let scheme = url.scheme();
+                        let host = url.host_str().unwrap();
+                        let mut full_host = format!("{scheme}://{host}");
+
+                        if let Some(port) = url.port() {
+                            full_host.push_str(&format!(":{port}"));
+                        }
+
+                        full_host
+                    };
+
+                    dbg!(&host);
+
+                    let host_sha = sha::sha1::Sha1::default().digest(host.as_bytes()).to_hex();
+
+                    let sha_path = cache_dir.join(host_sha);
+                    let cache_path = sha_path.join(
+                        sha::sha1::Sha1::default()
+                            .digest(url.path().as_bytes())
+                            .to_hex(),
+                    );
 
                     let mut builder = tauri::http::Response::builder();
 
-                    if let Some(h) = builder.headers_mut() {
-                        *h = std::mem::take(resp.headers_mut());
-                    }
+                    match fetch_resp {
+                        Ok(mut fetch_resp) => {
+                            if let Some(h) = builder.headers_mut() {
+                                *h = std::mem::take(fetch_resp.headers_mut());
+                            }
 
-                    responder.respond(
-                        builder
-                            .body::<Vec<u8>>(resp.bytes().await.unwrap().into())
-                            .unwrap(),
-                    );
+                            let bytes: Vec<u8> = fetch_resp.bytes().await.unwrap().into();
+
+                            std::fs::create_dir_all(&sha_path).unwrap();
+
+                            std::fs::write(cache_path, &bytes).ok();
+
+                            responder.respond(builder.body(bytes).unwrap());
+                        }
+                        Err(_) => match std::fs::read(cache_path) {
+                            Ok(bytes) => {
+                                responder.respond(builder.body(bytes).unwrap());
+                            }
+                            Err(_) => {
+                                unimplemented!()
+                            }
+                        },
+                    }
                 });
             },
         );
