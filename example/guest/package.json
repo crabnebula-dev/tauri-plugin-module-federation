@@ -1,10 +1,10 @@
 {
 	"name": "example-guest",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"devDependencies": {
 		"@babel/core": "7.24.7",
 		"@babel/preset-react": "7.24.7",
-		"@module-federation/enhanced": "0.2.5",
+		"@module-federation/enhanced": "0.2.6",
 		"@module-federation/runtime": "0.2.5",
 		"@rspack/cli": "0.7.5",
 		"@rspack/core": "0.7.5",
@@ -26,7 +26,9 @@
 	},
 	"dependencies": {
 		"lodash": "^3.10.1",
-		"react": "^16.13.0",
-		"react-dom": "^16.13.0"
+		"react": "^16.14.0",
+		"react-dom": "^16.14.0",
+		"rspack": "link:@module-federation/enhanced/rspack",
+		"zephyr-webpack-plugin": "^0.0.13"
 	}
 }
