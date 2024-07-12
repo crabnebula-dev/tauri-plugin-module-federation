@@ -1,7 +1,8 @@
 const {
-	HtmlRspackPlugin,
-	container: { ModuleFederationPlugin },
+  HtmlRspackPlugin,
+  container: { ModuleFederationPlugin },
 } = require("@rspack/core");
+// const { ModuleFederationPlugin } = require('@module-federation/enhanced/rspack')
 const path = require("node:path");
 const { withZephyr } = require("zephyr-webpack-plugin");
 
@@ -17,89 +18,87 @@ const { withZephyr } = require("zephyr-webpack-plugin");
 const deps = require("./package.json").dependencies;
 
 let config = {
-	entry: "./src/index",
-	mode: "development",
-	devServer: {
-		static: {
-			directory: path.join(__dirname, "dist"),
-		},
-		port: 3002,
-		headers: {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-			"Access-Control-Allow-Headers":
-				"X-Requested-With, content-type, Authorization",
-		},
-	},
-	target: "web",
-	output: {
-		publicPath: "auto",
-	},
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				include: path.resolve(__dirname, "src"),
-				use: {
-					loader: "builtin:swc-loader",
-					options: {
-						jsc: {
-							parser: {
-								syntax: "ecmascript",
-								jsx: true,
-							},
-							transform: {
-								react: {
-									runtime: "automatic",
-								},
-							},
-						},
-					},
-				},
-			},
-			{
-				test: /\.ts$/,
-				use: {
-					loader: "builtin:swc-loader",
-					options: {
-						jsc: {
-							parser: {
-								syntax: "typescript",
-								jsx: true,
-							},
-							transform: {
-								react: {
-									runtime: "automatic",
-								},
-							},
-						},
-					},
-				},
-			},
-		],
-	},
-	plugins: [
-		new ModuleFederationPlugin({
-			name: "example_guest",
-			filename: "remoteEntry.js",
-			exposes: {
-				"./Button": "./src/Button",
-			},
-			shared: {
-				...deps,
-				react: {
-					singleton: true,
-				},
-				"react-dom": {
-					singleton: true,
-				},
-				lodash: {},
-			},
-		}),
-		new HtmlRspackPlugin({
-			template: "./public/index.html",
-		}),
-	],
+  entry: "./src/index",
+  mode: "development",
+  devServer: {
+    static: path.join(__dirname, "dist"),
+    port: 3002,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization",
+    },
+  },
+  target: "web",
+  output: {
+    publicPath: "auto",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, "src"),
+        use: {
+          loader: "builtin:swc-loader",
+          options: {
+            jsc: {
+              parser: {
+                syntax: "ecmascript",
+                jsx: true,
+              },
+              transform: {
+                react: {
+                  runtime: "automatic",
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        test: /\.ts$/,
+        use: {
+          loader: "builtin:swc-loader",
+          options: {
+            jsc: {
+              parser: {
+                syntax: "typescript",
+                jsx: true,
+              },
+              transform: {
+                react: {
+                  runtime: "automatic",
+                },
+              },
+            },
+          },
+        },
+      },
+    ],
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: "example_guest",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./Button": "./src/Button",
+      },
+      shared: {
+        ...deps,
+        react: {
+          eager: true,
+        },
+        "react-dom": {
+          eager: true,
+        },
+        lodash: {},
+      },
+    }),
+    new HtmlRspackPlugin({
+      template: "./public/index.html",
+    }),
+  ],
 };
 
 if (process.env.WITH_ZEPHYR === "true") config = withZephyr()(config);
