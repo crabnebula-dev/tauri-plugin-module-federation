@@ -115,8 +115,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                         full_host
                     };
 
-                    dbg!(&host);
-
                     let host_sha = sha::sha1::Sha1::default().digest(host.as_bytes()).to_hex();
 
                     let sha_path = cache_dir.join(host_sha);
