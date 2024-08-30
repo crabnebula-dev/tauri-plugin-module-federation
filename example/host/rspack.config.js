@@ -86,7 +86,7 @@ let config = {
 			name: "example_host",
 			filename: "remoteEntry.js",
 			remotes: {
-				"example-guest": "example_guest@http://localhost:3002/remoteEntry.js",
+				example_guest: "example_guest@http://localhost:3002/remoteEntry.js",
 			},
 			runtimePlugins: [require.resolve("../../module-federation-plugin")],
 			shared: {

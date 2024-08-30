@@ -81,7 +81,7 @@ let config = {
 			name: "example_guest_2",
 			filename: "remoteEntry.js",
 			exposes: {
-				"./Button": "./src/Button",
+				"./Button": "./src/Button.js",
 			},
 			shared: {
 				...deps,

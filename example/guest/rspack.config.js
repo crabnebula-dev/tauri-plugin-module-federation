@@ -81,12 +81,12 @@ let config = {
 			name: "example_guest",
 			filename: "remoteEntry.js",
 			exposes: {
-				"./Button": "./src/Button",
+				"./Button": "./src/Button.js",
 			},
-			remotes: {
-				"example-guest-2":
-					"example_guest_2@http://localhost:3003/remoteEntry.js",
-			},
+			// remotes: {
+			// 	"example-guest-2":
+			// 		"example_guest_2@http://localhost:3003/remoteEntry.js",
+			// },
 			shared: {
 				...deps,
 				react: {

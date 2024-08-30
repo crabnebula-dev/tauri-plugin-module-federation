@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import lodash from "lodash";
 
 import LocalButton from "./Button";
-import RemoteButton from "example-guest/Button";
+import RemoteButton from "example_guest/Button";
 
 const getColorFromString = (str) => {
 	const primes = [1, 2, 3, 5, 7, 11, 13, 17, 19, 23];

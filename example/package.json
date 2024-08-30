@@ -3,7 +3,7 @@
 	"scripts": {
 		"dev": "pnpm --filter example-* --parallel dev",
 		"build": "pnpm --filter example-* --parallel build",
-		"guests": "pnpm --filter example-guest* --parallel",
+		"guests": "pnpm --filter example_guest* --parallel",
 		"host": "pnpm --filter example-host* --parallel"
 	}
 }
